@@ -1,9 +1,12 @@
-obj-m += calcul.o
+obj-m := calc.o
 
-all:
-    make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+KDIR :=/lib/modules/$(shell uname -r)/build
+
+PWD := $(shell pwd)
+
+default:
+	$(MAKE) -C $(KDIR) M=$(PWD) modules
 
 clean:
-    make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
-
+	rm *.mod.c *.o *.symvers *.ko *.order
 
