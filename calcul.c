@@ -41,6 +41,23 @@ static ssize_t proc_write(struct file *filp, const char __user *buffer, size_t c
 	
 	return *buffer_size;
 }
+int int_len(int num)
+{
+	int len = 0;
+	int k = 1;
+	if (num == 0) {
+		return 1;
+	}
+	if (num < 0) {
+		len++;
+		num *= -1;
+	}
+	while(num / k > 0) {
+		len++;
+		k *= 10;
+	}
+	return len;
+}
 static ssize_t dev_read(struct file * file, char * buf, size_t count, loff_t *ppos)
 {
 	char result[PROC_MAX_SIZE];
@@ -72,6 +89,13 @@ static ssize_t dev_read(struct file * file, char * buf, size_t count, loff_t *pp
 			default:
 				ok = 0;
 		}
+	}
+	if (!ok) {
+		memcpy(result, "Error!", 6);
+		len = 6;
+	} else {
+		sprintf(result, "%d", res);
+		len = int_len(res);
 	}
 	if (count < len)
 		return -EINVAL;
